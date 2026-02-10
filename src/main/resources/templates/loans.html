@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Loans</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Open+Sans&display=swap"
+          rel="stylesheet">
+
+    <!-- Reuse books styling -->
+    <link rel="stylesheet" th:href="@{/css/books.css}">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="page-header">
+    <h1>Loans</h1>
+
+    <!-- Logged-in info -->
+    <div class="user-bar">
+        <span>Logged in</span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="content">
+
+    <!-- Navigation -->
+    <div class="nav-links">
+        <a th:href="@{/books}">Books</a>
+        <a sec:authorize="hasRole('USER')" th:href="@{/wishlist}">My Wishlist</a>
+    </div>
+
+    <!-- ================= LOANS TABLE ================= -->
+    <div class="table-wrapper">
+        <table>
+
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Publisher</th>
+                <th>Genre</th>
+                <th>Borrowed On</th>
+                <th>Return By</th>
+
+                <!-- ADMIN only -->
+                <th sec:authorize="hasRole('ADMIN')">User</th>
+                <th sec:authorize="hasRole('ADMIN')">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="loan : ${loans}">
+                <td th:text="${loan.bookTitle}"></td>
+                <td th:text="${loan.bookAuthor}"></td>
+                <td th:text="${loan.bookPublicationYear}"></td>
+                <td th:text="${loan.bookPublisher}"></td>
+                <td th:text="${loan.bookGenre}"></td>
+                <td th:text="${loan.loanDate}"></td>
+                <td th:text="${loan.dueDate}"></td>
+
+                <!-- ADMIN: User column -->
+                <td sec:authorize="hasRole('ADMIN')" th:text="${loan.username}"></td>
+
+                <!-- ADMIN: Return -->
+                <td sec:authorize="hasRole('ADMIN')">
+                    <form th:action="@{/loans/return/{id}(id=${loan.id})}"
+                          method="post">
+                        <button type="submit">Return</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="page-footer">
+    <div class="footer-info">
+        <p>Address: Street Streety 34A, 2nd floor</p>
+        <p>Phone: 210 1234567</p>
+        <p>Email: libraryhead@lib.com</p>
+    </div>
+</footer>
+
+</body>
+</html>

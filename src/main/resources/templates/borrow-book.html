@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Borrow Book</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Open+Sans&display=swap"
+          rel="stylesheet">
+
+    <!-- Reuse Books CSS -->
+    <link rel="stylesheet" th:href="@{/css/books.css}">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="page-header">
+    <h1>Borrow Book</h1>
+
+    <!-- Logged-in info -->
+    <div class="user-bar">
+        <span>Logged in</span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="content">
+
+    <!-- Navigation -->
+    <div class="nav-links">
+        <a th:href="@{/books}">Back to Books</a>
+    </div>
+
+    <!-- ================= BORROW FORM ================= -->
+    <div class="table-wrapper">
+
+        <!-- Book info -->
+        <table>
+            <tr>
+                <th>Title</th>
+                <td th:text="${book.title}"></td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td th:text="${book.author}"></td>
+            </tr>
+            <tr>
+                <th>Year</th>
+                <td th:text="${book.publicationYear}"></td>
+            </tr>
+            <tr>
+                <th>Publisher</th>
+                <td th:text="${book.publisher}"></td>
+            </tr>
+            <tr>
+                <th>Genre</th>
+                <td th:text="${book.genre}"></td>
+            </tr>
+        </table>
+
+        <br/>
+
+        <form th:action="@{/loans/borrow}"
+              th:object="${loan}"
+              method="post">
+
+            <!-- Book ID -->
+            <input type="hidden" th:field="*{bookId}"/>
+
+            <table>
+                <tr>
+                    <th>Select User</th>
+                    <td>
+                        <select th:field="*{userId}" required>
+                            <option value="">-- select user --</option>
+                            <option th:each="u : ${users}"
+                                    th:value="${u.id}"
+                                    th:text="${u.firstname + ' ' + u.lastname + ' (' + u.email + ')'}">
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <br/>
+
+            <div style="text-align: center;">
+                <button type="submit">Borrow Book</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="page-footer">
+    <div class="footer-info">
+        <p>Address: Street Streety 34A, 2nd floor</p>
+        <p>Phone: 210 1234567</p>
+        <p>Email: libraryhead@lib.com</p>
+    </div>
+</footer>
+
+</body>
+</html>

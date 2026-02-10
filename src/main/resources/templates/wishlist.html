@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>My Wishlist</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Open+Sans&display=swap"
+          rel="stylesheet">
+
+    <!-- Wishlist CSS -->
+    <link rel="stylesheet" th:href="@{/css/wishlist.css}">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="page-header">
+    <h1>My Wishlist</h1>
+
+    <!-- Logged-in info -->
+    <div class="user-bar">
+        <span>Logged in</span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="content">
+
+    <!-- Navigation -->
+    <div class="nav-links">
+        <a th:href="@{/books}">Books</a>
+        <a th:href="@{/loans/my}">My Loans</a>
+    </div>
+
+    <!-- ================= WISHLIST TABLE ================= -->
+    <div class="table-wrapper">
+        <table>
+
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Publisher</th>
+                <th>Genre</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.publicationYear}"></td>
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.genre}"></td>
+
+                <!-- STATUS -->
+                <td>
+                    <span th:if="${book.available}">Available</span>
+
+                    <span th:if="${!book.available
+                                  and borrowedByMeIds.contains(book.id)}">
+                        Borrowed by me
+                    </span>
+
+                    <span th:if="${!book.available
+                                  and !borrowedByMeIds.contains(book.id)}">
+                        Borrowed
+                    </span>
+                </td>
+
+                <!-- REMOVE -->
+                <td>
+                    <form th:action="@{/wishlist/{id}(id=${book.id})}"
+                          method="post">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="remove-btn">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="page-footer">
+    <div class="footer-info">
+        <p>Address: Street Streety 34A, 2nd floor</p>
+        <p>Phone: 210 1234567</p>
+        <p>Email: libraryhead@lib.com</p>
+    </div>
+</footer>
+
+</body>
+</html>
